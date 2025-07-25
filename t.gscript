@@ -1,0 +1,5 @@
+set age = 18;
+as long as age < 21 {
+    say "Age is ";
+    set age = age + 1;
+}

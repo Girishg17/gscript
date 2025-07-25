@@ -47,7 +47,10 @@ std::shared_ptr<ASTNode> Parser::parseStatement() {
         return parseSay();
     } else if (match(TokenType::IF)) {
         return parseIf();
-    } else {
+    }else if (match(TokenType::AS_LONG_AS)) { 
+        return parseAsLongAs(); 
+    }
+    else {
         std::cerr << "Unknown statement at line " << peek().line << "\n";
         advance();
         return nullptr;
@@ -109,4 +112,28 @@ std::shared_ptr<IfNode> Parser::parseIf() {
     }
 
     return ifNode;
+}
+
+std::shared_ptr<AsLongAsNode> Parser::parseAsLongAs() {
+    auto condition = parseExpression();
+
+    if (!match(TokenType::LBRACE)) {
+        throw std::runtime_error("Expected '{' after as long as condition");
+    }
+
+    auto node = std::make_shared<AsLongAsNode>(condition);
+
+    // Parse statements inside the block
+    while (!check(TokenType::RBRACE) && !check(TokenType::END_OF_FILE)) {
+        auto stmt = parseStatement();
+        if (stmt) {
+            node->body.push_back(stmt);
+        }
+    }
+
+    if (!match(TokenType::RBRACE)) {
+        throw std::runtime_error("Expected '}' to close as long as block");
+    }
+
+    return node;
 }

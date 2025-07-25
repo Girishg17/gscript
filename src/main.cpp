@@ -59,6 +59,17 @@ void printAST(const std::shared_ptr<ASTNode>& node, int indent = 0) {
         }
         std::cout << space << "}\n";
     }
+    else if (auto aslongas = std::dynamic_pointer_cast<AsLongAsNode>(node)) { // <-- Add this block
+        std::cout << space << "AsLongAs Condition: "
+                  << aslongas->condition->left << " "
+                  << aslongas->condition->op << " "
+                  << aslongas->condition->right << "\n";
+        std::cout << space << "{\n";
+        for (const auto& stmt : aslongas->body) {
+            printAST(stmt, indent + 2);
+        }
+        std::cout << space << "}\n";
+    }
 }
 
 int main(int argc, char** argv) {

@@ -39,6 +39,26 @@ public:
             word += c;
             while (isalnum(peek())) word += advance();
 
+            if (word == "as") {
+                size_t savePos = pos;
+                skipWhitespace();
+
+                std::string second;
+                while (isalpha(peek())) second += advance();
+                if (second == "long") {
+                    skipWhitespace();
+                    std::string third;
+                    while (isalpha(peek())) third += advance();
+
+                    if (third == "as") {
+                        return Token(TokenType::AS_LONG_AS, "as long as", line);
+                    }
+                }
+
+                // If not full "as long as", rewind and treat "as" as identifier
+                pos = savePos;
+            }
+
             if (word == "say") return Token(TokenType::SAY, word, line);
             if (word == "if") return Token(TokenType::IF, word, line);
             if (word == "else") return Token(TokenType::ELSE, word, line);

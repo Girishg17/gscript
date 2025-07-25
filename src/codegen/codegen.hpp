@@ -22,6 +22,7 @@ private:
     std::string addString(const std::string& str);
     void emitSay(const SayNode* say);
     void emitIf(const IfNode* ifnode);
+    void emitAsLongAs(const AsLongAsNode* node);
 };
 
 #endif

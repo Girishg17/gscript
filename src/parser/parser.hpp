@@ -28,6 +28,7 @@ private:
     std::shared_ptr<ASTNode> parseStatement();
     std::shared_ptr<SayNode> parseSay();
     std::shared_ptr<IfNode> parseIf();
+    std::shared_ptr<AsLongAsNode> parseAsLongAs(); 
     std::shared_ptr<ExpressionNode> parseExpression();
 };
 

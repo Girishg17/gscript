@@ -33,5 +33,12 @@ struct IfNode : public ASTNode {
 
     IfNode(std::shared_ptr<ExpressionNode> cond) : condition(cond) {}
 };
+//as long as condition { ... }
+struct AsLongAsNode : public ASTNode {
+    std::shared_ptr<ExpressionNode> condition;
+    std::vector<std::shared_ptr<ASTNode>> body;
+
+    AsLongAsNode(std::shared_ptr<ExpressionNode> cond) : condition(cond) {}
+};
 
 #endif

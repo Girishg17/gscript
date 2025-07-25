@@ -17,7 +17,8 @@ enum class TokenType {
     RBRACE,
     SEMICOLON,
     UNKNOWN,
-    END_OF_FILE
+    END_OF_FILE,
+    AS_LONG_AS
 };
 
 struct Token {

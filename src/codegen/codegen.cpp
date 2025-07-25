@@ -56,6 +56,61 @@ void CodeGenerator::emitIf(const IfNode* ifnode) {
     text.push_back(lbl_end + ":");
 }
 
+// void CodeGenerator::emitAsLongAs(const AsLongAsNode* node) {
+//     auto cond = node->condition;
+//     std::string lbl_start = "label" + std::to_string(labelCount++);
+//     std::string lbl_end = "label" + std::to_string(labelCount++);
+
+//     text.push_back(lbl_start + ":");
+//     text.push_back("    mov rbx, 20  ; age"); // Example: set age to 20
+//     text.push_back("    cmp rbx, " + cond->right);
+
+//     std::string jump;
+//     if (cond->op == ">") jump = "jg";
+//     else if (cond->op == "<") jump = "jl";
+//     else if (cond->op == "==") jump = "je";
+//     else jump = "jne";  // fallback
+
+//     text.push_back("    " + jump + " " + lbl_end);
+
+//     for (const auto& stmt : node->body) {
+//         if (auto say = dynamic_cast<SayNode*>(stmt.get())) {
+//             emitSay(say);
+//         }
+//         // Add other statement types as needed
+//     }
+
+//     text.push_back("    jmp " + lbl_start);
+//     text.push_back(lbl_end + ":");
+// }
+
+void CodeGenerator::emitAsLongAs(const AsLongAsNode* node) {
+    auto cond = node->condition;
+    std::string lbl_start = "label" + std::to_string(labelCount++);
+    std::string lbl_end = "label" + std::to_string(labelCount++);
+
+    text.push_back("    mov rbx, " + cond->left + "  ; age"); // Set age to left value (e.g., 18)
+    text.push_back(lbl_start + ":");
+    text.push_back("    cmp rbx, " + cond->right);
+
+    std::string jump;
+    if (cond->op == "<") jump = "jge"; // exit if age >= right
+    else if (cond->op == ">") jump = "jle";
+    else if (cond->op == "==") jump = "jne";
+    else jump = "jmp";  // fallback
+
+    text.push_back("    " + jump + " " + lbl_end);
+
+    for (const auto& stmt : node->body) {
+        if (auto say = dynamic_cast<SayNode*>(stmt.get())) {
+            emitSay(say);
+        }
+    }
+    text.push_back("    inc rbx"); // increment age
+    text.push_back("    jmp " + lbl_start);
+    text.push_back(lbl_end + ":");
+}
+
 void CodeGenerator::generate(const std::vector<std::shared_ptr<ASTNode>>& program) {
     for (const auto& stmt : program) {
         if (auto say = dynamic_cast<SayNode*>(stmt.get())) {
@@ -63,6 +118,9 @@ void CodeGenerator::generate(const std::vector<std::shared_ptr<ASTNode>>& progra
         }
         else if (auto ifnode = dynamic_cast<IfNode*>(stmt.get())) {
             emitIf(ifnode);
+        }
+        else if (auto aslongas = dynamic_cast<AsLongAsNode*>(stmt.get())) { 
+            emitAsLongAs(aslongas);
         }
     }
 
