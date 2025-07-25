@@ -89,7 +89,12 @@ int main(int argc, char** argv) {
     }
     CodeGenerator gen;
     gen.generate(program);
-    gen.writeToFile("build/output.asm");
+    // gen.writeToFile("build/output.asm");
+    std::string outputAsmFile = "build/output.asm";
+    if (argc >= 3) {
+    outputAsmFile = argv[2];
+    }
+    gen.writeToFile(outputAsmFile);
 
     std::cout << "✅ Assembly written to build/output.asm\n";
 
