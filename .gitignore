@@ -1,0 +1,29 @@
+# Build output
+/build/
+*.o
+*.out
+*.asm
+*.obj
+*.exe
+*.bin
+*.elf
+
+# Executables
+gscript-run
+gsc
+program
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*~
