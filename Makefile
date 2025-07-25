@@ -9,7 +9,8 @@ BUILD_DIR = build
 SOURCES = \
 	$(SRC_DIR)/main.cpp \
 	$(SRC_DIR)/lexer/tokenizer.cpp \
-	$(SRC_DIR)/parser/parser.cpp
+	$(SRC_DIR)/parser/parser.cpp \
+	${SRC_DIR}/codegen/codegen.cpp
 
 EXECUTABLE = $(BUILD_DIR)/gscript
 

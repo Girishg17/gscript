@@ -35,6 +35,7 @@
 #include "lexer/tokenizer.cpp"
 #include "parser/parser.hpp"
 #include "parser/ast.hpp"
+#include "codegen/codegen.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -86,6 +87,11 @@ int main(int argc, char** argv) {
     for (const auto& stmt : program) {
         printAST(stmt);
     }
+    CodeGenerator gen;
+    gen.generate(program);
+    gen.writeToFile("build/output.asm");
+
+    std::cout << "✅ Assembly written to build/output.asm\n";
 
     return 0;
 }
