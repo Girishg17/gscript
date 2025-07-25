@@ -47,27 +47,46 @@ std::shared_ptr<ASTNode> Parser::parseStatement() {
         return parseSay();
     } else if (match(TokenType::IF)) {
         return parseIf();
-    } else {
+    }else if(match(TokenType::GRAB)){
+        return parseGrab();
+    } 
+    else {
         std::cerr << "Unknown statement at line " << peek().line << "\n";
         advance();
         return nullptr;
     }
 }
 
-std::shared_ptr<SayNode> Parser::parseSay() {
-    if (!check(TokenType::STRING)) {
-        throw std::runtime_error("Expected string after 'say'");
-    }
-    std::string message = advance().value;
+// std::shared_ptr<SayNode> Parser::parseSay() {
+//     if (!check(TokenType::STRING)) {
+//         throw std::runtime_error("Expected string after 'say'");
+//     }
+//     std::string message = advance().value;
 
-    // Optional: require semicolon
-    if (!match(TokenType::SEMICOLON)) {
-        throw std::runtime_error("Expected ';' after say statement");
-    }
+//     // Optional: require semicolon
+//     if (!match(TokenType::SEMICOLON)) {
+//         throw std::runtime_error("Expected ';' after say statement");
+//     }
 
-    return std::make_shared<SayNode>(message);
+//     return std::make_shared<SayNode>(message);
+// }
+std::shared_ptr<ASTNode> Parser::parseSay() {
+    if (check(TokenType::STRING)) {
+        std::string message = advance().value;
+        if (!match(TokenType::SEMICOLON)) {
+            throw std::runtime_error("Expected ';' after say statement");
+        }
+        return std::make_shared<SayNode>(message);
+    } else if (check(TokenType::IDENTIFIER)) {
+        std::string varName = advance().value;
+        if (!match(TokenType::SEMICOLON)) {
+            throw std::runtime_error("Expected ';' after say statement");
+        }
+        return std::make_shared<SayVarNode>(varName);
+    } else {
+        throw std::runtime_error("Expected string or variable after 'say'");
+    }
 }
-
 std::shared_ptr<ExpressionNode> Parser::parseExpression() {
     // Expect IDENTIFIER OP NUMBER (e.g., age > 18)
     std::string left = advance().value;
@@ -109,4 +128,26 @@ std::shared_ptr<IfNode> Parser::parseIf() {
     }
 
     return ifNode;
+}
+
+std::shared_ptr<ASTNode> Parser::parseGrab() {
+    if (!check(TokenType::IDENTIFIER)) {
+        throw std::runtime_error("Expected variable name after 'set'");
+    }
+    std::string varName = advance().value;
+
+    if (!match(TokenType::EQUAL)) {
+        throw std::runtime_error("Expected '=' after variable name");
+    }
+
+    if (!check(TokenType::NUMBER)) {
+        throw std::runtime_error("Expected number after '='");
+    }
+    std::string value = advance().value;
+
+    if (!match(TokenType::SEMICOLON)) {
+        throw std::runtime_error("Expected ';' after assignment");
+    }
+
+    return std::make_shared<GrabNode>(varName, value);
 }

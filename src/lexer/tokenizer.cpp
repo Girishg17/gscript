@@ -38,7 +38,7 @@ public:
             std::string word;
             word += c;
             while (isalnum(peek())) word += advance();
-
+            if (word=="grab") return Token(TokenType::GRAB, word, line);
             if (word == "say") return Token(TokenType::SAY, word, line);
             if (word == "if") return Token(TokenType::IF, word, line);
             if (word == "else") return Token(TokenType::ELSE, word, line);

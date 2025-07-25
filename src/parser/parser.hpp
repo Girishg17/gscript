@@ -26,7 +26,8 @@ private:
 
     // Grammar rules
     std::shared_ptr<ASTNode> parseStatement();
-    std::shared_ptr<SayNode> parseSay();
+    std::shared_ptr<ASTNode>parseGrab();
+    std::shared_ptr<ASTNode> parseSay();
     std::shared_ptr<IfNode> parseIf();
     std::shared_ptr<ExpressionNode> parseExpression();
 };
