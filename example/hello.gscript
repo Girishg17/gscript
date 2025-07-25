@@ -1,0 +1,4 @@
+say "Welcome";
+if age > 18 {
+  say "Adult";
+}
