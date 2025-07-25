@@ -1,15 +1,12 @@
-// gscript-run.cpp
-
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <filesystem>
 
-std::string stripExtension(const std::string& path) {
-    size_t slash = path.find_last_of('/');
-    size_t dot = path.find_last_of('.');
-    if (dot == std::string::npos) dot = path.size();
-    return path.substr(slash + 1, dot - slash - 1);
+// Helper: returns filename base without extension or dir
+std::string getBaseFileName(const std::string& path) {
+    std::filesystem::path p(path);
+    return p.stem().string();
 }
 
 int main(int argc, char* argv[]) {
@@ -17,17 +14,17 @@ int main(int argc, char* argv[]) {
         std::cerr << "Usage: gsc <source.gscript>\n";
         return 1;
     }
+    std::string inputFile = argv[1];
+    std::string outputBase = getBaseFileName(inputFile);
 
-    // std::string inputFile = argv[1];
-    std::string inputFile = std::filesystem::absolute(argv[1]);
-    std::string outputBase = stripExtension(inputFile);
+    std::filesystem::create_directory("build");
 
     std::string asmFile = "build/" + outputBase + ".asm";
     std::string objFile = "build/" + outputBase + ".o";
     std::string binFile = "build/" + outputBase;
 
     std::cout << "📘 Compiling " << inputFile << " → " << asmFile << "\n";
-    std::string compileCmd = "./build/gscript " + inputFile + " " + asmFile;
+    std::string compileCmd = "gscript " + inputFile + " " + asmFile;
     if (std::system(compileCmd.c_str()) != 0) return 1;
 
     std::cout << "⚙️  Assembling → " << objFile << "\n";

@@ -1,7 +1,0 @@
-say "hello new world";
-set age = 19;
-if age > 18 {
-    say "Adult";
-} else {
-    say "Minor";
-}
