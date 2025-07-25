@@ -15,7 +15,10 @@ struct SayNode : public ASTNode {
     std::string message;
     SayNode(const std::string& msg) : message(msg) {}
 };
-
+struct SayVarNode : public ASTNode {
+    std::string varName;
+    SayVarNode(const std::string& name) : varName(name) {}
+};
 // Expression: like x > 18
 struct ExpressionNode : public ASTNode {
     std::string left;
@@ -32,6 +35,12 @@ struct IfNode : public ASTNode {
     std::vector<std::shared_ptr<ASTNode>> body;
 
     IfNode(std::shared_ptr<ExpressionNode> cond) : condition(cond) {}
+};
+
+struct GrabNode : public ASTNode{
+    std::string varName;
+    std::string value;
+    GrabNode(const std::string& name, const std::string& val) : varName(name), value(val) {}
 };
 
 #endif

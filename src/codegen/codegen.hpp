@@ -22,6 +22,8 @@ private:
     std::string addString(const std::string& str);
     void emitSay(const SayNode* say);
     void emitIf(const IfNode* ifnode);
+    void emitSayVar(const SayVarNode* sayvar);
+    void emitGrab(const GrabNode* grab);
 };
 
 #endif

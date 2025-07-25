@@ -61,6 +61,12 @@ void CodeGenerator::generate(const std::vector<std::shared_ptr<ASTNode>>& progra
         if (auto say = dynamic_cast<SayNode*>(stmt.get())) {
             emitSay(say);
         }
+        else if (auto sayVar = dynamic_cast<SayVarNode*>(stmt.get())) {
+            emitSayVar(sayVar);
+        }
+        else if(auto grab = dynamic_cast<GrabNode*>(stmt.get())) {
+            emitGrab(grab);
+        }
         else if (auto ifnode = dynamic_cast<IfNode*>(stmt.get())) {
             emitIf(ifnode);
         }
@@ -76,4 +82,33 @@ void CodeGenerator::writeToFile(const std::string& filename) {
     out << "section .data\n";
     for (const auto& line : data) out << line << "\n";
     for (const auto& line : text) out << line << "\n";
+    // std::ofstream out(filename);
+    // out << "section .data\n";
+    // for (const auto& line : data) out << line << "\n";
+    // out << "\nsection .text\n";
+    // for (const auto& line : text) out << line << "\n";
+    // out.close();
+}
+
+
+void CodeGenerator::emitSayVar(const SayVarNode* sayVar) {
+    // For demonstration, print a hardcoded value for the variable
+    // In a real implementation, you'd look up the variable's value
+    text.push_back("    mov rax, 1");
+    text.push_back("    mov rdi, 1");
+    text.push_back("    mov rsi, var_" + sayVar->varName);
+    text.push_back("    mov rdx, 3"); // adjust length as needed
+    text.push_back("    syscall\n");
+}
+void CodeGenerator::emitGrab(const GrabNode* grab) {
+    //   text.push_back("    ; grab " + grab->varName + " = " + grab->value);
+    // For demonstration, just print a message
+    // text.push_back("    mov rax, 1");
+    // text.push_back("    mov rdi, 1");
+    // text.push_back("    mov rsi, msg_grab");
+    // text.push_back("    mov rdx, 12"); // length of "Grabbed!\n"
+    // text.push_back("    syscall\n");
+    // printf("    ; grab %s = %s\n", grab->varName.c_str(), grab->value.c_str());
+    // data.push_back("var_" + grab->varName + " dq " + grab->value);
+    data.push_back("var_" + grab->varName + " db \"" + grab->value + "\", 10, 0");
 }
